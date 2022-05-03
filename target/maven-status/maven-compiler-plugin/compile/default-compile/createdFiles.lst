@@ -1,5 +1,6 @@
 ar\model\Curso.class
 ar\model\NotNegativeNumber.class
+ar\model\Inscripcion.class
 ar\services\Cursos.class
 ar\jdbc\JdbcCursos.class
 ar\model\CursoException.class
@@ -13,5 +14,6 @@ ar\main\Main.class
 ar\model\EstudianteException.class
 ar\model\Direccion.class
 ar\model\NotNullNotEmpty.class
+ar\web\InscripcionDto.class
 ar\jdbc\JdbcEstudiantes.class
 ar\web\EstudianteDto.class

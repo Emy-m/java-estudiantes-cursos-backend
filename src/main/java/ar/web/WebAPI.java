@@ -31,6 +31,7 @@ public class WebAPI {
         app.get("/estudiantes", traerEstudiantes());
         app.get("/cursos", traerCursos());
         app.post("/estudiantes", crearEstudiante());
+        app.post("/inscribir", inscribirEnCursos());
 
         app.exception(EstudianteException.class, (e, ctx) -> {
             ctx.json(Map.of("result", "error", "message", e.getMessage()));
@@ -59,9 +60,9 @@ public class WebAPI {
 
     private Handler crearEstudiante() {
         return ctx -> {
-            EstDto dto = ctx.bodyAsClass(EstDto.class);
+            EstudianteDto dto = ctx.bodyAsClass(EstudianteDto.class);
             this.estudiantes.crearEstudiante(dto.getNombre(), dto.getApellido(),
-                    dto.getDireccion(), dto.getTelefonos(), dto.getCurso());
+                    dto.getDireccion(), dto.getTelefonos(), dto.getCursos());
             ctx.json(Map.of("result", "success"));
         };
     }
@@ -78,6 +79,20 @@ public class WebAPI {
             }
 
             ctx.json(Map.of("result", "success", "estudiantes", list));
+        };
+    }
+
+    private Handler inscribirEnCursos() {
+        return ctx -> {
+            InscripcionDto dto = ctx.bodyAsClass(InscripcionDto.class);
+            ArrayList<Curso> cursosNuevos = new ArrayList<Curso>();
+
+            for(String curso : dto.getIdCursos()) {
+                cursosNuevos.add(cursos.curso(Integer.parseInt(curso)));
+            }
+
+            this.estudiantes.inscribirEnCursos(dto.getApellido(), cursosNuevos);
+            ctx.json(Map.of("result", "success"));
         };
     }
 }

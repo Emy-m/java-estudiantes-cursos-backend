@@ -26,8 +26,10 @@ public class JdbcEstudiantes implements Estudiantes {
         p3.addTelefono("11222356");
 
         Curso curso = new Curso("Angular", 10, 1);
+        Curso curso2 = new Curso("React", 8, 2);
         p1.addCurso(curso);
         p2.addCurso(curso);
+        p2.addCurso(curso2);
         p3.addCurso(curso);
 
         this.estudiantes = new ArrayList<Estudiante>(List.of(p1, p2, p3));
@@ -44,13 +46,26 @@ public class JdbcEstudiantes implements Estudiantes {
     }
 
     @Override
-    public void crearEstudiante(String nombre, String apellido, String direccion, String[] telefonos, String cursoId) {
+    public void crearEstudiante(String nombre, String apellido, String direccion, String[] telefonos, String[] cursos) {
         Estudiante e = new Estudiante(nombre, apellido);
         e.addDireccion(direccion);
         e.addTelefonos(telefonos);
-        Curso curso = new JdbcCursos().curso(Integer.parseInt(cursoId));
-        e.addCurso(curso);
+        JdbcCursos jdbcCursos = new JdbcCursos();
+        for(String curso : cursos){
+            e.addCurso(jdbcCursos.curso(Integer.parseInt(curso)));
+        }
 
         estudiantes.add(e);
+    }
+
+    @Override
+    public void inscribirEnCursos(String apellido, ArrayList<Curso> cursosNuevos) {
+        this.estudiantes.forEach(estudiante -> {
+            if (estudiante.containsApellido(apellido)) {
+                for (Curso curso : cursosNuevos) {
+                    estudiante.addCurso(curso);
+                }
+            }
+        });
     }
 }
